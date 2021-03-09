@@ -14,3 +14,7 @@ In this Jupyter Notebook, I also performed some basic visualization of how the m
 
 ### Pulling Data and Transform for Stock Model
 This notebook was specifically for using the model to make predicts. The final product is being able to put in a list of tickers, and the output is those that had a certain probability threshold, which the user has control of. I added a comment regarding some advice on choosing a probability, since the model's probability distribution on the dataset had around a mean of 0.45 with a rather small standard deviation, so someone using something like 0.8 would probably not get any results on a daily basis.
+
+
+### StockModel
+This is the saved model that was trained.
