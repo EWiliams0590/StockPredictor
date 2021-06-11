@@ -1,4 +1,4 @@
-# Stock Increase Predictor
+# Stock Price Increase Predictor
 The purpose of this project was to create a model to predict when the closing price of a stock would increase by at least 2.25% over the next four days.
 
 The stocks used for training and testing were all the stocks in the "Technology" category (as defined by Yahoo Finance) with a stock price between $20-$200 with a 30-day average volume of at least 100,000. I went back 300 days to get the data and only kept the tickers with at least 30 days worth of data
