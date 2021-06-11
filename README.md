@@ -30,3 +30,5 @@ I will be using the same criteria for predicting with the model as it was traine
 
 ### Future Considerations
 I would like to learn more about neural networks/deep learning and try to a neural network to apply to this data. From much of my EDA, I noticed that many of the data features had clear trends as far as when Yes or No was more predicted; however, it was never a drastic sway. When I added in a polynomial features (up to degree 2 for computational reasons), the model performed almost exactly the same.
+
+I will also refine the pipeline for feeding data into the model so that it is one pipeline instead of two. This will be a quick fix, but I do not have time right now :).
