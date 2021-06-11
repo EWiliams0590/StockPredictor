@@ -21,9 +21,9 @@ As stated above, I chose a LogisticRegression model due to not only wanting a cl
 The model transforms the data by scaling all the features (all features are numerical).
 When predicting, the model does not consider the data points containing any outliers defined by the EDA I did.
 
+### Performance
 When evaluating the model, the average "Yes" prediction had stock price increase of about 3.5% compared to 2.25% with the No's. You can also see from the notebook on "Model Evaluation" that there is over twice as many predicted "No" than "Yes", but each has a substantial amount and the 95% confidence intervals of each are extremely far apart.
 
-### Performance
 The model performed just as well on the test data as the training data. I am going to update this once I have some more data as far as how the stock's my model predicts is performing. I will obtain the stock tickers that have a "Yes" prediction (along with their probabilities) prior to opening on each Monday and will keep track of the maximum closing price over the next four days to see how well it is performing.
 
 I will be using the same criteria for predicting with the model as it was trained on. Although some tickers will certainly change by virtue of changing stock prices and volumes, the point of making the restrictions on the training/testing data was to have an adequate amount of data to use each day with the same properties.
