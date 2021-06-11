@@ -85,62 +85,6 @@ def GetRSI(close, avgs=[3, 10], time_period=14):
     
     return RSI_df     
 
-    
-
-def VolumeRatio(volume, n_days_small=3, n_days_large=20):
-    """
-    Calculates the ratio of the average volume from n_days_small
-    over n_days_large. n_days_small < n_days_large.
-    """
-    if n_days_small < 1:
-        print("Both day inputs must be positive.")
-        print(f"Did not compute for n_days_small={n_days_small}")
-    elif n_days_small >= n_days_large:
-        print("n_days_small must be smaller than n_days_large.")
-        print(f"Did not compute for n_days_small={n_days_small} and n_days_large={n_days_large}")
-    else:
-        N = volume.shape[0]
-        name=f'Volume_{n_days_small}_over_{n_days_large}'
-
-        if N < n_days_large:
-            ratios = [np.nan]*N
-            ratios = pd.Series(data=ratios, index=volume.index, name=name)
-            return ratios
-        else:
-            ratios = [np.nan]*(n_days_large-1)
-
-            for i in range(n_days_large-1, N):
-                large_vol_avg = np.mean(volume[i-(n_days_large-1):i])
-                small_vol_avg = np.mean(volume[i-(n_days_small-1):i])
-                
-                if large_vol_avg == 0: # small_vol_avg == 0 as well
-                    ratios.append(0)
-                    
-                else:
-                    ratio = small_vol_avg/large_vol_avg
-                    ratios.append(ratio)
-
-            ratios = pd.Series(data=ratios, index=volume.index, name=name)
-
-            return ratios
-
-
-def VolumeRatiosRecursion(volume, list_of_days):
-    """
-    Get volume ratios for list of days, where
-    list_of_days is a list of pairs of days in
-    the order of (n_days_small, n_days_large)"""
-    vols_list = []
-    
-    for days in list_of_days:
-        n_days_small=days[0]
-        n_days_large=days[1]
-        vol_ratio = VolumeRatio(volume, n_days_small, n_days_large)
-        vols_list.append(vol_ratio)
-        
-    vols_df = pd.concat([x for x in vols_list], axis=1)
-    return vols_df
-
 
 def GetMACD(close):
     macd, macdsignal, macdhist = ta.MACDFIX(close)
