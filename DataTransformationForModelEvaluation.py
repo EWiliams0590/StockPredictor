@@ -37,11 +37,11 @@ class FeatureAdder(BaseEstimator, TransformerMixin):
             curr_trans_no_nan = curr_trans.dropna(axis=0)
             cols_to_drop = ['Open', 'High', 'Low', 'Close',
                             'Volume']
-            curr_trans_no_nan.drop(cols_to_drop, axis=1, inplace=True)
+            curr_trans_no_nan_dropped = curr_trans_no_nan.drop(cols_to_drop, axis=1)
             
             # Only keep the row with the final date
-            last = curr_trans_no_nan['Date'].max()
-            final_trans = curr_trans_no_nan[curr_trans_no_nan['Date']==last]
+            last = curr_trans_no_nan_dropped['Date'].max()
+            final_trans = curr_trans_no_nan_dropped[curr_trans_no_nan_dropped['Date']==last]
             
             # Set index to be ticker and date
             final = final_trans.set_index(['Ticker', 'Date'])

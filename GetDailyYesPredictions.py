@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 
 import yfinance as yf
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 def get_tickers():
     """
@@ -20,7 +20,7 @@ def get_tickers():
     
     while i > -1:
         curr_tickers = []
-        url = f'https://finance.yahoo.com/screener/unsaved/64413ad6-3475-4e94-a132-f5a7406404e5?dependentField=sector&dependentValues=Technology&offset={i}&count=100'
+        url = f'https://finance.yahoo.com/screener/unsaved/5875e80a-eb10-45ab-bfc4-bcbe532ced70?dependentField=sector&dependentValues=Technology&offset={i}&count=100'
         html = requests.get(url).text
         soup = BeautifulSoup(html, 'lxml')    
         table = soup.find_all('tr')[1:]
@@ -76,6 +76,7 @@ df_trans = FeatureAdder().fit_transform(df)
 outlier_values = pd.read_csv('OutlierValues.csv', index_col='Ticker')
 
 
+
 for feat in outlier_values.index:
     low = outlier_values.loc[feat]['Low']
     high = outlier_values.loc[feat]['High']
@@ -90,6 +91,7 @@ prob = model.predict_proba(df_trans)[:,1]
 
 data=np.column_stack((pred, prob))
 
+
 columns = ['Prediction', 'Probability']
 results = pd.DataFrame(index=df_trans.index, data=data, columns=columns)
 
@@ -99,4 +101,22 @@ today = str(today).split(' ')[0]
 yes = results[results['Prediction']=='Yes'].sort_values(by='Probability', 
                                                         ascending=False)
 
+
+
+# get close price for today for each
+
+closes = []
+for i in range(yes.shape[0]):
+    ticker = yes.index[i][0]
+    curr_date = yes.index[i][1]
+    
+    ticker = yf.Ticker(ticker)
+    curr = ticker.history(start=curr_date, end=curr_date+timedelta(days=1))
+    
+    close = curr['Close']
+    
+    closes.append(close.values[0])
+    
+yes[f"Close on {today}"] = closes
+    
 yes.to_csv(f'StockPicks{today}.csv')
