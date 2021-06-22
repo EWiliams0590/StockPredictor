@@ -3,30 +3,23 @@ The purpose of this project was to create a model to predict when the closing pr
 
 The stocks used for training and testing were all the stocks in the "Technology" category (as defined by Yahoo Finance) with a stock price between $20-$200 with a 30-day average volume of at least 100,000. I went back 300 days to get the data and only kept the tickers with at least 30 days worth of data
 
-Due to the desired result of probabilities, I used a LogisticRegression model.
-
 ### Obtaining the Data
 To obtain the data, I used yfinance and BeautifulSoup to get all the tickers meeting my desired criteria described above.
 
 ### Transforming the Data
 I created functions and a pipeline based on analysis done (both historical and of my own creation) to create features to help make predictions. After thorough analysis, I decided on which features to keep.
 
-I got rid of many data points that were extreme outliers. When I ran a sample model on the training set without this, I got extremely strange results.
+I got rid of many data points that were extreme outliers (only kept with 3 std of the mean since all distributions were roughly normal).
 
 ### EDA/Visualization
-The EDA was done using Jupyter Notebook. I cleaned it up after going through all the features I was interested in analyzing. This is in the "Stock EDA" notebook.
+The EDA was done using Jupyter Notebooks. I cleaned it up after going through all the features I was interested in analyzing. This is in the "Stock EDA" notebook. I used a RandomForestClassifier to get feature importances and noticed a huge improvement by limiting the training data to the following requirements: The stock must maintain a certain volatility (0.03) on average over the past 20 days and must have lost at least 5% of it's value over the past 10 days.
+
+The analysis on the training set, confirmed on the testing set, showed an average increase 95% confidence interval of (0.049, 0.054) (4.9%-5.4% increase) in closing stock price.
+
+Note that the volatility is defined by the (high-close)/close price on a given day.
 
 ### Model
-As stated above, I chose a LogisticRegression model due to not only wanting a classifier, but also wanting the probabilities.
-The model transforms the data by scaling all the features (all features are numerical).
-When predicting, the model does not consider the data points containing any outliers defined by the EDA I did.
+I performed GridSearch on a number of models including Random Forest Classification, Logistic Regression, and KNN Regressor, then validated the results. The best model, Logistic Regression, showed that, when a prediction of "Yes" with probability of at least 60% had an average increase 95% confidence interval of (0.047, 0.051) (4.7%-5.1% increase) in closing stock price
 
-### Performance
-When evaluating the model, the average "Yes" prediction had stock price increase of about 3.5% compared to 2.25% with the No's. You can also see from the notebook on "Model Evaluation" that there is over twice as many predicted "No" than "Yes", but each has a substantial amount and the 95% confidence intervals of each are extremely far apart.
-
-The model performed just as well on the test data as the training data. I am going to update this once I have some more data as far as how the stock's my model predicts is performing. I will obtain the stock tickers that have a "Yes" prediction (along with their probabilities) prior to opening on each Monday and will keep track of the maximum closing price over the next four days to see how well it is performing.
-
-I will be using the same criteria for predicting with the model as it was trained on. Although some tickers will certainly change by virtue of changing stock prices and volumes, the point of making the restrictions on the training/testing data was to have an adequate amount of data to use each day with the same properties.
-
-### Future Considerations
-I would like to learn more about neural networks/deep learning and try to a neural network to apply to this data. From much of my EDA, I noticed that many of the data features had clear trends as far as when Yes or No was more predicted; however, it was never a drastic sway. When I added in a polynomial features (up to degree 2 for computational reasons), the model performed almost exactly the same.
+### Final Result
+In comparison, limiting the data as described above performed just as well as the models on the test set. Due to this, I decided against using a model and just looking at these two features.
