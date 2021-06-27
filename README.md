@@ -31,7 +31,7 @@ Most importantly, roughly 5% of the data met the two restricted criteria, and si
 Of course, after doing all this, I wanted to be able to implement it and see what tickers it would suggest, so I created a script to get the daily "Yes" predictions, in this case, Yes meaning the stock tickers that meet the two restrictions above.
 
 ## Requirements
-
+[Requirements](https://github.com/EWiliams0590/StockPredictor/blob/main/requirements.txt)
 ## Notebooks and .py Scripts
   * [Scrape for Stock Tickers and Data](https://github.com/EWiliams0590/StockPredictor/blob/main/GetTickersAndDataForModelTraining.py)
   * [Functions for Feature Engineering](https://github.com/EWiliams0590/StockPredictor/blob/main/FunctionsForFeatureAdding.py)
