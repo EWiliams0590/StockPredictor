@@ -1,25 +1,49 @@
 # Stock Price Increase Predictor
-The purpose of this project was to create a model to predict when the closing price of a stock would increase by at least 2.25% over the next four days.
+## Motivation
+I was interested in analyzing certain properties of stock prices (custom and well known momentum creators) to increase weekly stock price gains over the course of a week.
 
-The stocks used for training and testing were all the stocks in the "Technology" category (as defined by Yahoo Finance) with a stock price between $20-$200 with a 30-day average volume of at least 100,000. I went back 300 days to get the data and only kept the tickers with at least 30 days worth of data
-
+## Process
 ### Obtaining the Data
-To obtain the data, I used yfinance and BeautifulSoup to get all the tickers meeting my desired criteria described above.
+I used a stock screener on Yahoo Finance to find all the current stock tickers that met a certain criteria. For this project, I filtered the screen to stock tickers with a price between $20-$200 on the day of data retrievel that are in the "Technology" category and had an average volume over the past 30 days of at least 100,000. I then used BeautifulSoup/HTML to scrape and create a list of all these tickers.
 
-### Transforming the Data
-I created functions and a pipeline based on analysis done (both historical and of my own creation) to create features to help make predictions. After thorough analysis, I decided on which features to keep.
+From there, I used the yfinance library to obtain the daily data for each of these stock tickers for the past 300 calendar days. As I knew I was going to be using or creating features based on previous day's data, I only kepts those which had at least 30 days worth of data.
 
-I got rid of many data points that were extreme outliers (only kept with 3 std of the mean since all distributions were roughly normal).
+### Data Cleaning and Feature Engineering
+After the data was obtained, I created custom features (a custom volatility and volume indicator) and use the talib to analyze some well known features. Initially, I analyzed a few (RSI, MACD, SMA), but upon analyzing each of these, I noticed that the only one that gave any interesting insights compared to the custom features was RSI, so this is all I kept.
 
-### EDA/Visualization
-The EDA was done using Jupyter Notebooks. I cleaned it up after going through all the features I was interested in analyzing. This is in the "Stock EDA" notebook. I used a RandomForestClassifier to get feature importances and noticed a huge improvement by limiting the training data to the following requirements: The stock must maintain a certain volatility (0.03) on average over the past 20 days and must have lost at least 5% of it's value over the past 10 days.
+I also created a target column measuring the maximum 4-day change in stock price (as a proportion), called SP_change_Target, and used this to create a "Yes/No" for classification called Target. The "Yes" was if the SP_change_Target >= 0.0225 (2.25%) and "No" otherwise.
 
-The analysis on the training set, confirmed on the testing set, showed an average increase 95% confidence interval of (0.049, 0.054) (4.9%-5.4% increase) in closing stock price.
+With how the data was created, many null values popped up from the feature engineering step, so I removed the nulls after fully feature engineering (otherwise consecutive rows may not be consecutive days).
 
-Note that the volatility is defined by the (high-close)/close price on a given day.
+### Data Mining, Visualization, and Analysis
+I then used Pandas, Numpy, Seaborn, and Matplotlib to look into the data. Discovering many extreme outliers in the dataset (some due to the "memestocks" on Reddit), I realized removing these outliers, not only for analysis but also to put in a pipeline for modeling/future analysis when choosing weekly stock tickers would be a good idea as they heavily swayed the target columns.
 
-### Model
-I performed GridSearch on a number of models including Random Forest Classification, Logistic Regression, and KNN Regressor, then validated the results. The best model, Logistic Regression, showed that, when a prediction of "Yes" with probability of at least 60% had an average increase 95% confidence interval of (0.047, 0.051) (4.7%-5.1% increase) in closing stock price
+I split the data into a train and test data sets at the beginning of analysis to avoid any data leakage.
 
-### Final Result
-In comparison, limiting the data as described above performed just as well as the models on the test set. Due to this, I decided against using a model and just looking at these two features.
+### Results
+After analyzing the average stock price change based on some of my created features and creating many classification models (trying to predict yes with a certain probability using Logistic Regression, Random Forest Regression, KNN Regression), I found that restricting to looking at a couple of features did just as well as the best model. 
+
+Overall, the average SP_change_Target for the training set was ~ 0.03 with a 95% CI of ~(0.029, 0.031). By restricting the dataset to have a 20-day average volatility of 0.03 and have lost at least 5% of it's stock price over the 10 days, the test data had a 95% CI of ~(0.048, 0.066). Moreso, the when combining the entire dataset back together, the overall 95% CI was ~(0.049, 0.054), which is about a 60% increase in looking at the data without these restrictions.
+
+Most importantly, roughly 5% of the data met the two restricted criteria, and since there are ~300 tickers that meet the filtered criteria described above, this means we can expect to have ~15 tickers per week to meet the criteria. Of course, if this restriction was such that there was no way to guarantee we would get any tickers to meet these criteria, then the results would not be meaningful.
+
+### Predictions
+Of course, after doing all this, I wanted to be able to implement it and see what tickers it would suggest, so I created a script to get the daily "Yes" predictions, in this case, Yes meaning the stock tickers that meet the two restrictions above.
+
+## Requirements
+
+## Notebooks and .py Scripts
+  * [Scrape for Stock Tickers and Data](https://github.com/EWiliams0590/StockPredictor/blob/main/GetTickersAndDataForModelTraining.py)
+  * [Functions for Feature Engineering](https://github.com/EWiliams0590/StockPredictor/blob/main/FunctionsForFeatureAdding.py)
+  * [Pipeline for Converting Data](https://github.com/EWiliams0590/StockPredictor/blob/main/ConvertData.py)
+  * [Data Visualization and Analysis](https://github.com/EWiliams0590/StockPredictor/blob/main/Stock%20EDA.ipynb)
+  * [Model Creation and Evaluation](https://github.com/EWiliams0590/StockPredictor/blob/main/Model%20Evaluation.ipynb)
+  * [Get the Daily "Yes" Predictions](https://github.com/EWiliams0590/StockPredictor/blob/main/GetDailyYesPredictions.py)
+  
+## Python Libraries
+  * [BeautifulSoup4](https://pypi.org/project/beautifulsoup4/), [requests](https://pypi.org/project/requests/) - Web scraping
+  * [yfinance](https://pypi.org/project/yfinance/) - Obtaining Daily Data
+  * [talib](http://mrjbq7.github.io/ta-lib/doc_index.html) - Traditional technical analysis library for stocks
+  * [Pandas](https://pandas.pydata.org/), [Numpy](https://numpy.org/), [Scipy](https://www.scipy.org/) - Data Analysis
+  * [Matplotlib](https://matplotlib.org/), [Seaborn](https://seaborn.pydata.org/index.html) - Data Visualization
+  * [Sci-kit Learn](https://scikit-learn.org/stable/index.html) - Feature engineering, Pipelines, Preprocessing, and Model Creation
