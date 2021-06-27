@@ -1,0 +1,11 @@
+beautifulsoup4=4.9.3=pyha847dfd_0
+matplotlib=3.3.2=haa95532_0
+numpy=1.19.2=py38hadc3359_0
+pandas=1.2.0=py38hf11a4ad_0
+python=3.8.5=h5fd99cc_1
+requests=2.25.1=pyhd3deb0d_0
+scikit-learn=0.24.0=py38ha09990b_0
+scipy=1.5.2=py38h14eb087_0
+seaborn=0.11.1=pyhd3eb1b0_0
+ta-lib=0.4.19=pypi_0
+yfinance=0.1.55=pypi_0
