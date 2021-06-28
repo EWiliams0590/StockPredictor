@@ -39,6 +39,7 @@ Of course, after doing all this, I wanted to be able to implement it and see wha
   * [Data Visualization and Analysis](https://github.com/EWiliams0590/StockPredictor/blob/main/Stock%20EDA.ipynb)
   * [Model Creation and Evaluation](https://github.com/EWiliams0590/StockPredictor/blob/main/Model%20Evaluation.ipynb)
   * [Get the Daily "Yes" Predictions](https://github.com/EWiliams0590/StockPredictor/blob/main/GetDailyYesPredictions.py)
+  * [Evaluating the Picks](https://github.com/EWiliams0590/StockPredictor/blob/main/EvaluationOfModelPicks.py)
   
 ## Python Libraries
   * [BeautifulSoup4](https://pypi.org/project/beautifulsoup4/), [requests](https://pypi.org/project/requests/) - Web scraping
